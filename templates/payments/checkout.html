@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - LinXy{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Payment Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="payment-form" method="POST">
+                            {{ form.hidden_tag() }}
+                            
+                            <div class="form-group">
+                                <label for="card-element">Credit or Debit Card</label>
+                                <div id="card-element" class="form-control" style="height: 40px; padding: 10px;"></div>
+                                <div id="card-errors" role="alert" class="text-danger mt-2"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="name-on-card">Name on Card</label>
+                                <input type="text" class="form-control" id="name-on-card" placeholder="Full name as displayed on card">
+                            </div>
+                            
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary btn-block" id="submit-button">
+                                    Pay {{ price }} AMD
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Order Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Plan:</span>
+                            <strong>{{ plan|title }} ({{ period|title }})</strong>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Amount:</span>
+                            <strong>{{ price }} AMD</strong>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Billing:</span>
+                            <strong>{{ 'Monthly' if period == 'monthly' else 'Yearly' }}</strong>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between">
+                            <span>Total:</span>
+                            <strong>{{ price }} AMD</strong>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <p class="small text-muted">
+                                <i class="fas fa-lock mr-2"></i>
+                                Your payment is secure and encrypted
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const stripe = Stripe('{{ stripe_public_key }}');
+        const elements = stripe.elements();
+        const cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+        
+        const form = document.getElementById('payment-form');
+        const submitButton = document.getElementById('submit-button');
+        
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+            
+            const {error, paymentMethod} = await stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+                billing_details: {
+                    name: document.getElementById('name-on-card').value
+                }
+            });
+            
+            if (error) {
+                document.getElementById('card-errors').textContent = error.message;
+                submitButton.disabled = false;
+                submitButton.innerHTML = 'Pay {{ price }} AMD';
+            } else {
+                // Add payment method ID to form and submit
+                const hiddenInput = document.createElement('input');
+                hiddenInput.setAttribute('type', 'hidden');
+                hiddenInput.setAttribute('name', 'payment_method_id');
+                hiddenInput.setAttribute('value', paymentMethod.id);
+                form.appendChild(hiddenInput);
+                
+                form.submit();
+            }
+        });
+    });
+</script>
+{% endblock %}

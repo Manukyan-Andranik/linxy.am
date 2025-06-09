@@ -1,0 +1,452 @@
+{% extends "base.html" %}
+
+{% block title %}{{ campaign.title }} - LinXy{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/campaigns/view.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <!-- Campaign Header -->
+        <div class="campaign-header">
+            <div class="campaign-actions">
+                <div class="dropdown">
+   
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="campaignActions">
+                        <a class="dropdown-item" href="#"><i class="fas fa-edit mr-2"></i>Edit Campaign</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-copy mr-2"></i>Duplicate</a>
+                        <div class="dropdown-divider"></div>
+                        {% if campaign.status == 'active' %}
+                        <a class="dropdown-item text-warning" href="#"><i class="fas fa-pause mr-2"></i>Pause Campaign</a>
+                        {% else %}
+                        <a class="dropdown-item text-success" href="#"><i class="fas fa-play mr-2"></i>Activate Campaign</a>
+                        {% endif %}
+                        <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash mr-2"></i>Delete</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container">
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='images/logos/' + campaign.logo) }}" 
+                         class="campaign-image" 
+                         alt="{{ campaign.title }}">
+                </div>
+                <h1 class="campaign-title">{{ campaign.title }}</h1>
+                <div class="campaign-meta">
+                    <span class="campaign-status {{ campaign.status }}">
+                        <i class="fas fa-circle mr-1" style="font-size: 0.5rem;"></i>
+                        {{ campaign.status|capitalize }}
+                    </span>
+                    <span class="campaign-dates">
+                        <i class="far fa-calendar-alt mr-1"></i>
+                        Created {{ campaign.created_at.strftime('%b %d, %Y') }}
+                        {% if campaign.start_date %}
+                        • Runs {{ campaign.start_date.strftime('%b %d') }} to {{ campaign.end_date.strftime('%b %d, %Y') }}
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaign Stats -->
+        <div class="stat-cards">
+            <div class="stat-card">
+                <div class="stat-card-value">{{ "{:,}".format(campaign.budget) }} AMD</div>
+                <div class="stat-card-label">Total Budget</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-value">{{ collaborations|length }}</div>
+                <div class="stat-card-label">Influencers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-value">
+                    {% if campaign.status == 'active' and collaborations|length > 0 %}
+                        {{ "{:,}".format(campaign.total_reach or 0) }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+                <div class="stat-card-label">Estimated Reach</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-value">
+                    {% if campaign.status == 'active' and collaborations|length > 0 %}
+                        {{ "%.2f"|format(campaign.engagement_rate or 0) }}%
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+                <div class="stat-card-label">Avg Engagement</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Campaign Details Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Campaign Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h6 class="section-title">Description</h6>
+                            <p class="campaign-description">{{ campaign.description or 'No description provided' }}</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h6 class="section-title">Requirements</h6>
+                            <p class="campaign-description">{{ campaign.requirements or 'No specific requirements' }}</p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6 class="section-title">Target Audience</h6>
+                            {% if campaign.influencer_requirements %}
+                            <ul class="detail-list">
+                                <li class="detail-item">
+                                    <span class="detail-label">Gender</span>
+                                    <span class="detail-value">
+                                        {% if campaign.influencer_requirements.target_gender %}
+                                            {{ campaign.influencer_requirements.target_gender|capitalize }}
+                                        {% else %}
+                                            Any
+                                        {% endif %}
+                                    </span>
+                                </li>
+                                <li class="detail-item">
+                                    <span class="detail-label">Age Range</span>
+                                    <span class="detail-value">
+                                        {% if campaign.influencer_requirements.min_age and campaign.influencer_requirements.max_age %}
+                                            {{ campaign.influencer_requirements.min_age }}-{{ campaign.influencer_requirements.max_age }} years
+                                        {% else %}
+                                            Any
+                                        {% endif %}
+                                    </span>
+                                </li>
+                                <li class="detail-item">
+                                    <span class="detail-label">Location</span>
+                                    <span class="detail-value">
+                                        {{ campaign.influencer_requirements.target_location or 'Any' }}
+                                    </span>
+                                </li>
+                                <li class="detail-item">
+                                    <span class="detail-label">Min Followers</span>
+                                    <span class="detail-value">
+                                        {{ "{:,}".format(campaign.influencer_requirements.min_followers) if campaign.influencer_requirements.min_followers else 'Any' }}
+                                    </span>
+                                </li>
+                                <li class="detail-item">
+                                    <span class="detail-label">Min Engagement</span>
+                                    <span class="detail-value">
+                                        {{ campaign.influencer_requirements.min_engagement }}%+
+                                    </span>
+                                </li>
+                                <li class="detail-item">
+                                    <span class="detail-label">Max Price</span>
+                                    <span class="detail-value">
+                                        {{ "{:,}".format(campaign.influencer_requirements.max_price) if campaign.influencer_requirements.max_price else 'Any' }} AMD
+                                    </span>
+                                </li>
+                            </ul>
+                            {% else %}
+                            <p class="text-muted">No specific audience requirements defined</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Influencers Card -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="card-title">AI-Recommended Influencers</h5>
+                        <div>
+                            <button class="btn btn-sm btn-primary mr-2" onclick="window.location.href='/influencers';">
+                                <i class="fas fa-plus mr-1"></i> Find Influencers
+                            </button>
+                            
+                            {% if collaborations %}
+                            <button class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#messageInfluencersModal">
+                                <i class="fas fa-envelope mr-1"></i> Message All
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <section class="dashboard">
+                            <div class="container">
+                              <!-- (Keep all previous header, stats, and activity sections) -->
+                          
+                              <!-- AI-Powered Influencer Finder Section -->
+                              <div class="influencer-finder">
+                                <div class="card">
+                                  <div class="card-header">
+                                    <div class="finder-header">
+                                      <div class="finder-search">
+                                        <input type="text" class="search-input" placeholder="Search by name, category...">
+                                        <button class="search-btn">
+                                          <i class="fas fa-search"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                    <div class="filter-tags">
+                                      <div class="filter-tag active" data-filter="all">All</div>
+                                      <div class="filter-tag" data-filter="high-engagement">High Engagement</div>
+                                      <div class="filter-tag" data-filter="cost-effective">Cost Effective</div>
+                                      <div class="filter-tag" data-filter="target-audience">Your Target Audience</div>
+                                      <div class="filter-tag" data-filter="similar-campaigns">Similar Campaigns</div>
+                                    </div>
+                                  </div>
+                                  <div class="card-body">
+                                    <div class="influencer-grid">
+                                      {% for influencer in recommended_influencers %}
+                                      <div class="influencer-card" 
+                                           data-engagement="{{ influencer.data_points[0].engagement_rate|float }}"
+                                           data-price="{{ influencer.data_points[0].price_reels_creative|float }}"
+                                           data-category="{{ influencer.data_points[0].category|lower }}"
+                                           data-audience-match="{{ influencer.ai_metrics.audience_match|float }}"
+                                           data-campaign-match="{{ influencer.ai_metrics.campaign_match|float }}">
+                                        <div class="ai-badge">AI Score: {{ "%.1f"|format(influencer.ai_metrics.score) }} %</div>
+                                        <img src="{{ url_for('static', filename='images/' + influencer.photo) }}" alt="{{ influencer.full_name }}" class="influencer-avatar">
+                                        <div class="influencer-body">
+                                          <h4 class="influencer-name">{{ influencer.full_name }}</h4>
+                                          <span class="influencer-category">{{ influencer.data_points[0].category }}</span>
+                                          <div class="influencer-stats">
+                                            <div class="stat-item">
+                                              <div class="stat-value">
+                                                {% if influencer.data_points[0].subs >= 1000000 %}
+                                                  {{ "%.1fM"|format(influencer.data_points[0].subs / 1000000) }}
+                                                {% elif influencer.data_points[0].subs >= 1000 %}
+                                                  {{ "%.1fK"|format(influencer.data_points[0].subs / 1000) }}
+                                                {% else %}
+                                                  {{ influencer.data_points[0].subs }}
+                                                {% endif %}
+                                              </div>
+                                              <div class="stat-label">Followers</div>
+                                            </div>
+                                            <div class="stat-item">
+                                              <div class="stat-value">{{ "%.2f"|format(influencer.data_points[0].engagement_rate|float) }}%</div>
+                                              <div class="stat-label">Engagement</div>
+                                            </div>
+                                            <div class="stat-item">
+                                              <div class="stat-value">
+                                                {% if influencer.data_points[0].avg_views_reels >= 1000000 %}
+                                                  {{ "%.1fM"|format(influencer.data_points[0].avg_views_reels / 1000000) }}
+                                                {% elif influencer.data_points[0].avg_views_reels >= 1000 %}
+                                                  {{ "%.1fK"|format(influencer.data_points[0].avg_views_reels / 1000) }}
+                                                {% else %}
+                                                  {{ influencer.data_points[0].avg_views_reels }}
+                                                {% endif %}
+                                              </div>
+                                              <div class="stat-label">Avg. Views</div>
+                                            </div>
+                                          </div>
+                                          <div class="recommendation-reason">
+                                            <span class="recommendation-score">{{ loop.index }}</span>
+                                            {{ influencer.ai_metrics.reason }}
+                                          </div>
+                                        </div>
+                                        <div class="influencer-footer">
+                                          <span class="engagement-rate {% if influencer.data_points[0].engagement_rate|float > 8 %}engagement-high{% elif influencer.data_points[0].engagement_rate|float > 4 %}engagement-medium{% else %}engagement-low{% endif %}">
+                                            {% if influencer.data_points[0].engagement_rate|float > 8 %}High
+                                            {% elif influencer.data_points[0].engagement_rate|float > 4 %}Mid
+                                            {% else %}Low{% endif %} Engagement
+                                          </span>
+                                          <button class="btn btn-primary btn-sm">Contact</button>
+                                        </div>
+                                      </div>
+                                      {% endfor %}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                          
+                              <!-- (Keep rest of your existing content) -->
+                            </div>
+                          </section>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Timeline Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Campaign Timeline</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            {% if campaign.start_date %}
+                            <div class="timeline-item">
+                                <div class="timeline-dot">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="timeline-date">{{ campaign.start_date.strftime('%b %d, %Y') }}</div>
+                                    <h6 class="timeline-title">Campaign Started</h6>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if collaborations %}
+                            <div class="timeline-item">
+                                <div class="timeline-dot">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="timeline-date">{{ collaborations[0].created_at.strftime('%b %d, %Y') }}</div>
+                                    <h6 class="timeline-title">First Influencer Joined</h6>
+                                </div>
+                            </div>
+                            
+                            {% if campaign.status == 'active' %}
+                            <div class="timeline-item">
+                                <div class="timeline-dot">
+                                    <i class="fas fa-photo-video"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="timeline-date">{{ (collaborations[0].created_at + timedelta(days=2)).strftime('%b %d, %Y') }}</div>
+                                    <h6 class="timeline-title">Content Started</h6>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                            
+                            {% if campaign.end_date %}
+                            <div class="timeline-item">
+                                <div class="timeline-dot">
+                                    <i class="fas fa-flag-checkered"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="timeline-date">{{ campaign.end_date.strftime('%b %d, %Y') }}</div>
+                                    <h6 class="timeline-title">Campaign {{ 'Ends' if campaign.status == 'active' else 'Ended' }}</h6>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions Card -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="card-title">Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <a href="{{ url_for('browse_influencers')}}" class="quick-action" data-toggle="modal" data-target="#findInfluencersModal">
+                            <div class="quick-action-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="quick-action-text">Find Influencers</div>
+                        </a>
+                        {% if collaborations %}
+                        <a href="#" class="quick-action" data-toggle="modal" data-target="#messageInfluencersModal">
+                            <div class="quick-action-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="quick-action-text">Message All Influencers</div>
+                        </a>
+                        {% endif %}
+                        <a href="#" class="quick-action">
+                            <div class="quick-action-icon">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                            </div>
+                            <div class="quick-action-text">View Budget Breakdown</div>
+                        </a>
+                        {% if campaign.status == 'active' %}
+                        <a href="{{ url_for('campaign_analytics', campaign_id=campaign.id) }}" class="quick-action">
+                            <div class="quick-action-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="quick-action-text">View Detailed Analytics</div>
+                        </a>
+                        {% endif %}
+                        <a href="#" class="quick-action">
+                            <div class="quick-action-icon">
+                                <i class="fas fa-share-alt"></i>
+                            </div>
+                            <div class="quick-action-text">Share Campaign</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Search functionality
+  const searchInput = document.querySelector('.search-input');
+  const searchBtn = document.querySelector('.search-btn');
+  
+  searchBtn.addEventListener('click', filterInfluencers);
+  searchInput.addEventListener('input', function() {
+    if (this.value === '') filterInfluencers();
+  });
+
+  // Filter tag functionality
+  const filterTags = document.querySelectorAll('.filter-tag');
+  filterTags.forEach(tag => {
+    tag.addEventListener('click', function() {
+      filterTags.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      filterInfluencers();
+    });
+  });
+
+  // Combined filter function
+  function filterInfluencers() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const activeFilter = document.querySelector('.filter-tag.active').dataset.filter;
+    const cards = document.querySelectorAll('.influencer-card');
+    
+    cards.forEach(card => {
+      const name = card.querySelector('.influencer-name').textContent.toLowerCase();
+      const category = card.querySelector('.influencer-category').textContent.toLowerCase();
+      const engagement = parseFloat(card.dataset.engagement);
+      const price = parseFloat(card.dataset.price);
+      const audienceMatch = parseFloat(card.dataset.audienceMatch);
+      const campaignMatch = parseFloat(card.dataset.campaignMatch);
+      
+      // Search filter
+      const searchMatch = name.includes(searchTerm) || category.includes(searchTerm);
+      
+      // Category filters
+      let filterMatch = true;
+      switch(activeFilter) {
+        case 'high-engagement':
+          filterMatch = engagement > 8;
+          break;
+        case 'cost-effective':
+          filterMatch = (price < 300000) && (engagement > 5);
+          break;
+        case 'target-audience':
+          filterMatch = audienceMatch > 0.7;
+          break;
+        case 'similar-campaigns':
+          filterMatch = campaignMatch > 0.7;
+          break;
+      }
+      
+      if (searchMatch && filterMatch) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // Initialize with all influencers shown
+  filterInfluencers();
+});
+</script>
+{% endblock %}

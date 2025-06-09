@@ -1,0 +1,296 @@
+<style>
+.charts-section {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 10px;
+    box-sizing: border-box;
+}
+
+.chart-container {
+    position: absolute;
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.5s ease-in-out;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.chart-wrapper {
+    width: 100%;
+    max-width: 900px;
+    height: 80vh;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.chart-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    font-size: 1.8rem;
+}
+
+canvas {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 60vh;
+}
+
+.nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.85);
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    transition: all 0.3s;
+}
+
+.nav-button:hover {
+    background: white;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
+
+.chart-navigation {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.nav-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ccc;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.nav-dot.active {
+    background: #4285f4;
+    transform: scale(1.2);
+}
+
+/* Mobile & tablet */
+@media (max-width: 768px) {
+    .chart-wrapper {
+        height: auto;
+        padding: 15px;
+    }
+
+    .chart-title {
+        font-size: 1.4rem;
+    }
+
+    .nav-button {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .nav-dot {
+        width: 8px;
+        height: 8px;
+    }
+
+    canvas {
+        max-height: 50vh;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    .chart-title {
+        font-size: 1.2rem;
+    }
+
+    .chart-wrapper {
+        padding: 10px;
+    }
+}
+
+</style>
+<section class="charts-section">
+    <button class="nav-button prev">❮</button>
+    <button class="nav-button next">❯</button>
+    
+    <div class="chart-navigation"></div>
+    
+    <!-- Chart 1: Ad Spending Trends -->
+    <div class="chart-container" data-index="0">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Ad Spending Trends (2018-2025)</h2>
+            <canvas id="chart1"></canvas>
+        </div>
+    </div>
+
+    <!-- Chart 2 -->
+    <div class="chart-container" data-index="1">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Return on Investment (ROI) Over Years</h2>
+            <canvas id="chart2"></canvas>
+        </div>
+    </div>
+
+    <!-- Chart 3 -->
+    <div class="chart-container" data-index="2">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Platform Engagement (Millions of Users)</h2>
+            <canvas id="chart3"></canvas>
+        </div>
+    </div>
+    
+    <!-- Chart 4 -->
+    <div class="chart-container" data-index="3">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Age and Gender Distribution</h2>
+            <canvas id="chart4"></canvas>
+        </div>
+    </div>
+
+    <!-- Chart 5 -->
+    <div class="chart-container" data-index="4">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Traffic Share by Device Type</h2>
+            <canvas id="chart5"></canvas>
+        </div>
+    </div>
+
+    <!-- Chart 6 -->
+    <div class="chart-container" data-index="5">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Engagement Rates by Platform</h2>
+            <canvas id="chart6"></canvas>
+        </div>
+    </div>
+    <!-- Chart 7 -->
+     <div class="chart-container" data-index="6">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Influencer Growth Trends</h2>
+            <canvas id="chart7"></canvas>
+        </div>
+    </div>
+    <!-- Chart 8 -->
+    <div class="chart-container" data-index="7">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Engagement Peak by Time Range</h2>
+            <canvas id="chart8"></canvas>
+        </div>
+    </div>
+    <!-- Chart 9 -->
+    <div class="chart-container" data-index="8">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Engagement Peak by Language</h2>
+            <canvas id="chart9"></canvas>
+        </div>
+    </div>
+    <!-- Chart 10 -->
+    <div class="chart-container" data-index="9">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Engagement Peak by Monetization Type</h2>
+            <canvas id="chart10"></canvas>
+        </div>
+    </div>
+    <!-- Chart 11 -->
+    <div class="chart-container" data-index="10">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Engagement Peak by Content Type</h2>
+            <canvas id="chart11"></canvas>
+        </div>
+    </div>
+    <!-- Chart 12 -->
+    <div class="chart-container" data-index="11">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Engagement Peak by Audience Size</h2>
+            <canvas id="chart12"></canvas>
+        </div>
+    </div>
+    <!-- Chart 13 -->
+    <div class="chart-container" data-index="12">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Engagement Peak by Content Type</h2>
+            <canvas id="chart13"></canvas>
+        </div>
+    </div>
+    <!-- Chart 14 -->
+    <div class="chart-container" data-index="13">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Engagement Peak by Audience Size</h2>
+            <canvas id="chart14"></canvas>
+        </div>
+    </div>
+    <!-- Chart 15 -->
+    <div class="chart-container" data-index="14">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Engagement Peak by Tier</h2>
+            <canvas id="chart15"></canvas>
+        </div>
+    </div>
+    <!-- Chart 16 -->
+    <div class="chart-container" data-index="15">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Engagement Peak by Tier</h2>
+            <canvas id="chart16"></canvas>
+        </div>
+    </div>
+    <!-- Chart 17 -->
+    <div class="chart-container" data-index="16">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Engagement Peak by Category</h2>
+            <canvas id="chart17"></canvas>
+        </div>
+    </div>
+    <!-- Chart 18 -->
+    <div class="chart-container" data-index="17">
+        <div class="chart-wrapper">
+            <h2 class="chart-title">Engagement Peak by Duration</h2>
+            <canvas id="chart18"></canvas>
+        </div>  
+    </div>
+
+
+
+
+</section>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/chart-logic.js') }}"></script>

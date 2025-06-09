@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Create Campaign - LinXy{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/campaigns/create.css') }}">
+{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Create New Campaign</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ url_for('create_campaign') }}">
+                            {{ form.hidden_tag() }}
+                            
+                            <div class="form-group">
+                                {{ form.title.label(class="form-label") }}
+                                {{ form.title(class="form-control", placeholder="e.g. Summer Collection 2023") }}
+                                {% for error in form.title.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form.description.label(class="form-label") }}
+                                {{ form.description(class="form-control", rows=4, placeholder="Describe your campaign goals and what you're looking for in influencers") }}
+                                {% for error in form.description.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form.budget.label(class="form-label") }}
+                                <div class="input-group">
+                                    {{ form.budget(class="form-control", placeholder="Estimated total budget") }}
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">AMD</span>
+                                    </div>
+                                </div>
+                                {% for error in form.budget.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.start_date.label(class="form-label") }}
+                                        {{ form.start_date(class="form-control") }}
+                                        {% for error in form.start_date.errors %}
+                                            <small class="text-danger">{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.end_date.label(class="form-label") }}
+                                        {{ form.end_date(class="form-control") }}
+                                        {% for error in form.end_date.errors %}
+                                            <small class="text-danger">{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form.requirements.label(class="form-label") }}
+                                {{ form.requirements(class="form-control", rows=3, placeholder="Specific requirements for influencers (e.g. post frequency, content type)") }}
+                                {% for error in form.requirements.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            
+                            <h5 class="mt-4 mb-3">Target Audience</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.target_gender.label(class="form-label") }}
+                                        {{ form.target_gender(class="form-control") }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form.target_age_min.label(class="form-label") }}
+                                        {{ form.target_age_min(class="form-control") }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form.target_age_max.label(class="form-label") }}
+                                        {{ form.target_age_max(class="form-control") }}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form.target_location.label(class="form-label") }}
+                                {{ form.target_location(class="form-control", placeholder="e.g. Yerevan, Armenia") }}
+                            </div>
+                            
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary">Create Campaign</button>
+                                <a href="{{ url_for('list_campaigns') }}" class="btn btn-outline-secondary">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

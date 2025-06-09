@@ -1,0 +1,12 @@
+test.py
+.env
+.DS_Store
+__pycache__/
+linxy/
+new_test.py
+data/
+Influence_nkar.zip
+all_influencers.json
+influencers_processed.json
+influencers_processed.txt
+generate_synetic_data.py

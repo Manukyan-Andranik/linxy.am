@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Campaigns - LinXy{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/campaigns/list.css') }}">
+
+{% endblock %}
+
+{% block content %}
+<section class="campaigns">
+  <div class="container">
+    <div class="campaigns-header">
+      <h1>Your Campaigns</h1>
+      <button id="open-modal" class="btn btn-primary" onclick="window.location.href='/campaign/create';">+ Create New Campaign</button>
+    </div>
+
+    <div class="campaign-tabs">
+      <button class="tab-btn active" data-status="all">All Campaigns</button>
+      <button class="tab-btn" data-status="active">Active</button>
+      <button class="tab-btn" data-status="draft">Draft</button>
+      <button class="tab-btn" data-status="completed">Completed</button>
+    </div>
+
+    <div class="campaigns-table table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Campaign Name</th>
+            <th>Brand</th>
+            <th>Status</th>
+            <th>Budget</th>
+            <th>Influencers</th>
+            <th>Dates</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="campaigns-tbody">
+          {% for campaign in campaigns %}
+          <tr data-status="{{ campaign.status|lower }}">
+            <td>{{ campaign.title }}</td>
+            <td>{{ campaign.brand }}</td>
+            <td>
+              <span class="status-badge {{ 'active' if campaign.status == 'Active' else 'completed' }}">
+                {{ campaign.status }}
+              </span>
+            </td>
+            <td>{{ "{:,.0f}".format(campaign.budget) }} AMD</td>
+            <td>{{ campaign.influencers|length }}</td>
+            <td>{{ campaign.start_date }} - {{ campaign.end_date }}</td>
+            <td>
+              <a href="{{ url_for('view_campaign', campaign_id=campaign.id) }}" class="btn-action"><i class="fas fa-eye"></i></a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if view_campaign %}
+    <!-- Campaign details and influencer selection section here... (unchanged for brevity) -->
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll('.tab-btn');
+    const rows = document.querySelectorAll('#campaigns-tbody tr');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs
+        tabs.forEach(t => t.classList.remove('active'));
+
+        // Add active to clicked tab
+        tab.classList.add('active');
+
+        const status = tab.getAttribute('data-status');
+
+        rows.forEach(row => {
+          if (status === 'all') {
+            row.style.display = '';
+          } else {
+            row.style.display = row.dataset.status === status ? '' : 'none';
+          }
+        });
+      });
+    });
+  });
+</script>
+{% endblock %}

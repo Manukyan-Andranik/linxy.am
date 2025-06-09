@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - LinXy{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <div class="container">
+    <!-- (Keep all previous header, stats, and activity sections) -->
+
+    <!-- AI-Powered Influencer Finder Section -->
+    <div class="influencer-finder">
+      <div class="card">
+        <div class="card-header">
+          <div class="finder-header">
+            <h3 class="finder-title">AI-Recommended Influencers</h3>
+            <div class="finder-search">
+              <input type="text" class="search-input" placeholder="Search by name, category...">
+              <button class="search-btn">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+          <div class="filter-tags">
+            <div class="filter-tag active" data-filter="all">All</div>
+            <div class="filter-tag" data-filter="high-engagement">High Engagement</div>
+            <div class="filter-tag" data-filter="cost-effective">Cost Effective</div>
+            <div class="filter-tag" data-filter="target-audience">Your Target Audience</div>
+            <div class="filter-tag" data-filter="similar-campaigns">Similar Campaigns</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="influencer-grid">
+            {% for influencer in recommended_influencers %}
+            <div class="influencer-card" 
+                 data-engagement="{{ influencer.data_points[0].engagement_rate|float }}"
+                 data-price="{{ influencer.data_points[0].price_reels_creative|float }}"
+                 data-category="{{ influencer.data_points[0].category|lower }}"
+                 data-audience-match="{{ influencer.ai_metrics.audience_match|float }}"
+                 data-campaign-match="{{ influencer.ai_metrics.campaign_match|float }}">
+              <div class="ai-badge">AI Score: {{ "%.1f"|format(influencer.ai_metrics.score) }} %</div>
+              <img src="{{ url_for('static', filename='images/' + influencer.photo) }}" alt="{{ influencer.full_name }}" class="influencer-avatar">
+              <div class="influencer-body">
+                <h4 class="influencer-name">{{ influencer.full_name }}</h4>
+                <span class="influencer-category">{{ influencer.data_points[0].category }}</span>
+                <div class="influencer-stats">
+                  <div class="stat-item">
+                    <div class="stat-value">
+                      {% if influencer.data_points[0].subs >= 1000000 %}
+                        {{ "%.1fM"|format(influencer.data_points[0].subs / 1000000) }}
+                      {% elif influencer.data_points[0].subs >= 1000 %}
+                        {{ "%.1fK"|format(influencer.data_points[0].subs / 1000) }}
+                      {% else %}
+                        {{ influencer.data_points[0].subs }}
+                      {% endif %}
+                    </div>
+                    <div class="stat-label">Followers</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value">{{ "%.2f"|format(influencer.data_points[0].engagement_rate|float) }}%</div>
+                    <div class="stat-label">Engagement</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value">
+                      {% if influencer.data_points[0].avg_views_reels >= 1000000 %}
+                        {{ "%.1fM"|format(influencer.data_points[0].avg_views_reels / 1000000) }}
+                      {% elif influencer.data_points[0].avg_views_reels >= 1000 %}
+                        {{ "%.1fK"|format(influencer.data_points[0].avg_views_reels / 1000) }}
+                      {% else %}
+                        {{ influencer.data_points[0].avg_views_reels }}
+                      {% endif %}
+                    </div>
+                    <div class="stat-label">Avg. Views</div>
+                  </div>
+                </div>
+                <div class="recommendation-reason">
+                  <span class="recommendation-score">{{ loop.index }}</span>
+                  {{ influencer.ai_metrics.reason }}
+                </div>
+              </div>
+              <div class="influencer-footer">
+                <span class="engagement-rate {% if influencer.data_points[0].engagement_rate|float > 8 %}engagement-high{% elif influencer.data_points[0].engagement_rate|float > 4 %}engagement-medium{% else %}engagement-low{% endif %}">
+                  {% if influencer.data_points[0].engagement_rate|float > 8 %}High
+                  {% elif influencer.data_points[0].engagement_rate|float > 4 %}Mid
+                  {% else %}Low{% endif %} Engagement
+                </span>
+                <button class="btn btn-primary btn-sm">Contact</button>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- (Keep rest of your existing content) -->
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Search functionality
+  const searchInput = document.querySelector('.search-input');
+  const searchBtn = document.querySelector('.search-btn');
+  
+  searchBtn.addEventListener('click', filterInfluencers);
+  searchInput.addEventListener('input', function() {
+    if (this.value === '') filterInfluencers();
+  });
+
+  // Filter tag functionality
+  const filterTags = document.querySelectorAll('.filter-tag');
+  filterTags.forEach(tag => {
+    tag.addEventListener('click', function() {
+      filterTags.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      filterInfluencers();
+    });
+  });
+
+  // Combined filter function
+  function filterInfluencers() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const activeFilter = document.querySelector('.filter-tag.active').dataset.filter;
+    const cards = document.querySelectorAll('.influencer-card');
+    
+    cards.forEach(card => {
+      const name = card.querySelector('.influencer-name').textContent.toLowerCase();
+      const category = card.querySelector('.influencer-category').textContent.toLowerCase();
+      const engagement = parseFloat(card.dataset.engagement);
+      const price = parseFloat(card.dataset.price);
+      const audienceMatch = parseFloat(card.dataset.audienceMatch);
+      const campaignMatch = parseFloat(card.dataset.campaignMatch);
+      
+      // Search filter
+      const searchMatch = name.includes(searchTerm) || category.includes(searchTerm);
+      
+      // Category filters
+      let filterMatch = true;
+      switch(activeFilter) {
+        case 'high-engagement':
+          filterMatch = engagement > 8;
+          break;
+        case 'cost-effective':
+          filterMatch = (price < 300000) && (engagement > 5);
+          break;
+        case 'target-audience':
+          filterMatch = audienceMatch > 0.7;
+          break;
+        case 'similar-campaigns':
+          filterMatch = campaignMatch > 0.7;
+          break;
+      }
+      
+      if (searchMatch && filterMatch) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // Initialize with all influencers shown
+  filterInfluencers();
+});
+</script>
+{% endblock %}

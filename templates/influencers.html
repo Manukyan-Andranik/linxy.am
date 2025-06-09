@@ -1,0 +1,376 @@
+{% extends "base.html" %}
+
+{% block title %}Influencers{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/influencers.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <h1>Our Influencers</h1>
+    <p>Browse our collection of talented influencers</p>
+  </div>
+</section>
+
+<div class="container">
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <div class="filter-header">
+      <h2>Filters</h2>
+      <button id="reset-filters" class="btn btn-secondary">Reset All</button>
+    </div>
+    
+    <div class="filter-row">
+      <!-- Social Network Filter -->
+      <div class="filter-group">
+        <label for="social-network">Social Network</label>
+        <select id="social-network" class="form-control">
+          <option value="">All Networks</option>
+          <option value="instagram">Instagram</option>
+          <option value="tiktok">TikTok</option>
+          <option value="youtube">YouTube</option>
+          <option value="facebook">Facebook</option>
+        </select>
+      </div>
+      
+      <!-- Category Filter -->
+      <div class="filter-group">
+        <label for="category">Category</label>
+        <select id="category" class="form-control">
+          <option value="">All Categories</option>
+          <option value="lifestyle">Lifestyle</option>
+          <option value="education">Education</option>
+          <option value="music">Music</option>
+          <option value="cinema">Cinema</option>
+          <option value="humor">Humor</option>
+          <option value="blog">Blog</option>
+          <option value="medcine">Medicine</option>
+          <option value="techno">Technology</option>
+        </select>
+      </div>
+      
+      <!-- Follower Range Filter -->
+      <div class="filter-group">
+        <label for="followers">Followers</label>
+        <select id="followers" class="form-control">
+          <option value="">Any</option>
+          <option value="0-50000">0 - 50K</option>
+          <option value="50000-100000">50K - 100K</option>
+          <option value="100000-200000">100K - 200K</option>
+          <option value="200000+">200K+</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="filter-row">
+      <!-- Engagement Rate Filter -->
+      <div class="filter-group">
+        <label for="engagement">Engagement Rate</label>
+        <select id="engagement" class="form-control">
+          <option value="">Any</option>
+          <option value="0-5">Low (0-5%)</option>
+          <option value="5-10">Medium (5-10%)</option>
+          <option value="10+">High (10%+)</option>
+        </select>
+      </div>
+      
+      <!-- Price Range Filter -->
+      <div class="filter-group">
+        <label for="price-range">Price Range (Reels)</label>
+        <select id="price-range" class="form-control">
+          <option value="">Any</option>
+          <option value="0-200000">0 - 200K</option>
+          <option value="200000-400000">200K - 400K</option>
+          <option value="400000-600000">400K - 600K</option>
+          <option value="600000+">600K+</option>
+        </select>
+      </div>
+      
+      <!-- Gender Distribution Filter -->
+      <div class="filter-group">
+        <label for="gender">Audience Gender</label>
+        <select id="gender" class="form-control">
+          <option value="">Any</option>
+          <option value="male">Male Majority</option>
+          <option value="female">Female Majority</option>
+          <option value="balanced">Balanced</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="filter-row">
+      <!-- Location Filter -->
+      <div class="filter-group">
+        <label for="location">Primary Location</label>
+        <select id="location" class="form-control">
+          <option value="">Any</option>
+          <option value="armenia">Armenia</option>
+          <option value="russia">Russia</option>
+          <option value="usa">USA</option>
+          <option value="georgia">Georgia</option>
+        </select>
+      </div>
+      
+      <!-- Age Group Filter -->
+      <div class="filter-group">
+        <label for="age-group">Primary Age Group</label>
+        <select id="age-group" class="form-control">
+          <option value="">Any</option>
+          <option value="13-17">Teens (13-17)</option>
+          <option value="18-24">Young Adults (18-24)</option>
+          <option value="25-34">Adults (25-34)</option>
+          <option value="35-44">Mature Adults (35-44)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Results Count -->
+  <div class="results-count">
+    Showing <span id="filtered-count">{{ influencers|length }}</span> of {{ influencers|length }} influencers
+  </div>
+
+  <main class="influencers-grid">
+    {% for influencer in influencers %}
+    {% if influencer.photo != "client_default.jpg" %}
+    <div class="influencer-card" 
+         data-social-net="{{ influencer.data_points[0].social_net|lower }}"
+         data-category="{{ influencer.data_points[0].category|lower }}"
+         data-followers="{{ influencer.data_points[0].subs|default(0) }}"
+         data-engagement="{{ influencer.data_points[0].engagement_rate|default(0) }}"
+         data-price="{{ influencer.data_points[0].price_reels_creative|default(0) }}"
+         data-gender="{{ 'male' if influencer.data_points[0].men|default(0) > 0.6 else 'female' if influencer.data_points[0].women|default(0) > 0.6 else 'balanced' }}"
+         data-location="{% if influencer.data_points[0].armenia|default(0) > 0.5 %}armenia{% elif influencer.data_points[0].russia|default(0) > 0.5 %}russia{% elif influencer.data_points[0].usa|default(0) > 0.5 %}usa{% elif influencer.data_points[0].georgia|default(0) > 0.5 %}georgia{% endif %}"
+         data-age-group="{% if influencer.data_points[0].age_13_17|default(0) > 0.3 %}13-17{% elif influencer.data_points[0].age_18_24|default(0) > 0.3 %}18-24{% elif influencer.data_points[0].age_25_34|default(0) > 0.3 %}25-34{% elif influencer.data_points[0].age_35_44|default(0) > 0.3 %}35-44{% endif %}">
+      <div class="card-header">
+        <img src="{{ url_for('static', filename='images/' + influencer.photo) }}" alt="Avatar" class="card-avatar">
+      </div>
+      <div class="card-body">
+        <h3 class="influencer-name">{{ influencer.full_name }}</h3>
+        
+        <!-- Loop through all social profiles for this influencer -->
+        {% for profile in influencer.data_points %}
+        <div class="influencer-platform">
+          <a href="{{ profile.link }}" target="_blank" class="platform-icon {{ profile.social_net.lower() }}">
+            <i class="fab fa-{{ profile.social_net.lower() }}"></i>
+          </a>
+          <a href="{{ profile.link }}" target="_blank">{{ profile.social_net|capitalize }}</a>
+        </div>
+        
+        <div class="stats">
+          <div class="stat-item">
+            <div class="stat-value">{{ profile.subs|default(0) }}</div>
+            <div class="stat-label">Followers</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">{{ "%.2f"|format(profile.engagement_rate|default(0)) }}%</div>
+            <div class="stat-label">Engagement</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">
+              {% if profile.avg_views_reels >= 1000000 %}
+                {{ "%.1fM"|format(profile.avg_views_reels / 1000000) }}
+              {% elif profile.avg_views_reels >= 1000 %}
+                {{ "%.1fK"|format(profile.avg_views_reels / 1000) }}
+              {% else %}
+                {{ profile.avg_views_reels|default(0) }}
+              {% endif %}
+            </div>
+            <div class="stat-label">Avg. Views</div>
+          </div>
+        </div>
+        
+        <div class="pricing">
+          <div class="price-item">
+            <span class="price-label">Story</span>
+            <span class="price-value">{{ profile.price_stories|default(0) }}</span>
+          </div>
+          <div class="price-item">
+            <span class="price-label">Post</span>
+            <span class="price-value">{{ profile.price_photo_post|default(0) }}</span>
+          </div>
+          <div class="price-item">
+            <span class="price-label">Reel</span>
+            <span class="price-value">{{ profile.price_reels_creative|default(0) }}</span>
+          </div>
+        </div>
+        <hr>
+        {% endfor %}
+      </div>
+      <div class="card-footer">
+        <span class="engagement-rate">
+          {% set max_engagement = influencer.data_points | map(attribute='engagement_rate') | max %}
+          {% if max_engagement > 8 %}High Engagement
+          {% elif max_engagement > 4 %}Good Engagement
+          {% else %}Low Engagement{% endif %}
+        </span>
+        <button class="btn btn-primary btn-sm">Contact</button>
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+    
+    <!-- No Results Message -->
+    <div id="no-results" class="no-results-message" style="display: none;">
+      <h3>No influencers match your filters</h3>
+      <p>Try adjusting your filter criteria</p>
+    </div>
+  </main>
+
+  <div class="pagination">
+    <div class="page-btn"><i class="fas fa-chevron-left"></i></div>
+    <div class="page-btn active">1</div>
+    <div class="page-btn">2</div>
+    <div class="page-btn">3</div>
+    <div class="page-btn">4</div>
+    <div class="page-btn">5</div>
+    <div class="page-btn"><i class="fas fa-chevron-right"></i></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get all filter elements
+  const socialNetworkFilter = document.getElementById('social-network');
+  const categoryFilter = document.getElementById('category');
+  const followersFilter = document.getElementById('followers');
+  const engagementFilter = document.getElementById('engagement');
+  const priceRangeFilter = document.getElementById('price-range');
+  const genderFilter = document.getElementById('gender');
+  const locationFilter = document.getElementById('location');
+  const ageGroupFilter = document.getElementById('age-group');
+  const resetFiltersBtn = document.getElementById('reset-filters');
+  const filteredCount = document.getElementById('filtered-count');
+  const noResultsMessage = document.getElementById('no-results');
+  
+  // Get all influencer cards
+  const influencerCards = document.querySelectorAll('.influencer-card');
+  
+  // Function to apply all filters
+  function applyFilters() {
+    let visibleCount = 0;
+    
+    // Get filter values
+    const socialNetworkValue = socialNetworkFilter.value.toLowerCase();
+    const categoryValue = categoryFilter.value.toLowerCase();
+    const followersValue = followersFilter.value;
+    const engagementValue = engagementFilter.value;
+    const priceRangeValue = priceRangeFilter.value;
+    const genderValue = genderFilter.value;
+    const locationValue = locationFilter.value;
+    const ageGroupValue = ageGroupFilter.value;
+    
+    // Loop through all influencer cards
+    influencerCards.forEach(card => {
+      const cardSocialNet = card.getAttribute('data-social-net');
+      const cardCategory = card.getAttribute('data-category');
+      const cardFollowers = parseInt(card.getAttribute('data-followers')) || 0;
+      const cardEngagement = parseFloat(card.getAttribute('data-engagement')) || 0;
+      const cardPrice = parseInt(card.getAttribute('data-price')) || 0;
+      const cardGender = card.getAttribute('data-gender');
+      const cardLocation = card.getAttribute('data-location');
+      const cardAgeGroup = card.getAttribute('data-age-group');
+      
+      // Check each filter condition
+      const socialNetworkMatch = !socialNetworkValue || cardSocialNet.includes(socialNetworkValue);
+      const categoryMatch = !categoryValue || cardCategory.includes(categoryValue);
+      
+      let followersMatch = true;
+      if (followersValue) {
+        const [min, max] = followersValue.split('-').map(part => {
+          if (part.endsWith('+')) return parseInt(part) || 0;
+          if (part.endsWith('K')) return parseInt(part) * 1000;
+          return parseInt(part) || 0;
+        });
+        
+        if (max === undefined) {
+          followersMatch = cardFollowers >= min;
+        } else {
+          followersMatch = cardFollowers >= min && cardFollowers <= max;
+        }
+      }
+      
+      let engagementMatch = true;
+      if (engagementValue) {
+        const [min, max] = engagementValue.split(/[-+]/).map(Number);
+        if (max === undefined) {
+          engagementMatch = cardEngagement >= min;
+        } else {
+          engagementMatch = cardEngagement >= min && cardEngagement <= max;
+        }
+      }
+      
+      let priceMatch = true;
+      if (priceRangeValue) {
+        const [min, max] = priceRangeValue.split(/[-+]/).map(part => {
+          if (part.endsWith('+')) return parseInt(part) || 0;
+          if (part.endsWith('K')) return parseInt(part) * 1000;
+          return parseInt(part) || 0;
+        });
+        
+        if (max === undefined) {
+          priceMatch = cardPrice >= min;
+        } else {
+          priceMatch = cardPrice >= min && cardPrice <= max;
+        }
+      }
+      
+      const genderMatch = !genderValue || cardGender === genderValue;
+      const locationMatch = !locationValue || cardLocation === locationValue;
+      const ageGroupMatch = !ageGroupValue || cardAgeGroup === ageGroupValue;
+      
+      // Show or hide card based on all filters
+      if (socialNetworkMatch && categoryMatch && followersMatch && 
+          engagementMatch && priceMatch && genderMatch && 
+          locationMatch && ageGroupMatch) {
+        card.style.display = 'block';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    
+    // Update results count
+    filteredCount.textContent = visibleCount;
+    
+    // Show/hide no results message
+    if (visibleCount === 0) {
+      noResultsMessage.style.display = 'block';
+    } else {
+      noResultsMessage.style.display = 'none';
+    }
+  }
+  
+  // Add event listeners to all filters
+  socialNetworkFilter.addEventListener('change', applyFilters);
+  categoryFilter.addEventListener('change', applyFilters);
+  followersFilter.addEventListener('change', applyFilters);
+  engagementFilter.addEventListener('change', applyFilters);
+  priceRangeFilter.addEventListener('change', applyFilters);
+  genderFilter.addEventListener('change', applyFilters);
+  locationFilter.addEventListener('change', applyFilters);
+  ageGroupFilter.addEventListener('change', applyFilters);
+  
+  // Reset all filters
+  resetFiltersBtn.addEventListener('click', function() {
+    socialNetworkFilter.value = '';
+    categoryFilter.value = '';
+    followersFilter.value = '';
+    engagementFilter.value = '';
+    priceRangeFilter.value = '';
+    genderFilter.value = '';
+    locationFilter.value = '';
+    ageGroupFilter.value = '';
+    
+    applyFilters();
+  });
+  
+  // Apply filters on page load (in case there are URL parameters)
+  applyFilters();
+});
+</script>
+{% endblock %}

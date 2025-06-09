@@ -1,0 +1,333 @@
+/* Campaign Page Specific Styles */
+.campaign-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.campaign-header-info h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+}
+
+.campaign-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    color: var(--gray);
+}
+
+.campaign-meta-separator {
+    color: var(--light-gray);
+}
+
+.campaign-badge {
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+}
+
+/* Campaign Dropdown */
+.campaign-dropdown .dropdown-btn {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    background-color: var(--lighter-gray);
+    transition: var(--transition);
+}
+
+.campaign-dropdown .dropdown-btn:hover {
+    background-color: var(--light-gray);
+}
+
+.campaign-dropdown .dropdown-content {
+    min-width: 220px;
+    border: 1px solid var(--light-gray);
+}
+
+.campaign-dropdown .dropdown-item {
+    padding: 0.75rem 1.25rem;
+}
+
+/* Campaign Details Card */
+.campaign-details-card .card-header {
+    padding: 1.5rem 1.5rem 0;
+    border-bottom: none;
+}
+
+.campaign-details-card .card-body {
+    padding-top: 0;
+}
+
+.campaign-detail-section {
+    margin-bottom: 2rem;
+}
+
+.campaign-detail-section h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--dark);
+}
+
+.campaign-detail-section p {
+    color: var(--dark-gray);
+    line-height: 1.7;
+}
+
+.campaign-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.campaign-detail-item h6 {
+    font-size: 0.875rem;
+    color: var(--gray);
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.campaign-detail-item p {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--dark);
+}
+
+/* Target Audience List */
+.target-audience-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.target-audience-list li {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.target-audience-list li:last-child {
+    border-bottom: none;
+}
+
+.target-audience-list strong {
+    min-width: 100px;
+    display: inline-block;
+    color: var(--dark);
+}
+
+/* Influencers Card */
+.influencers-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+}
+
+.influencers-table {
+    width: 100%;
+}
+
+.influencers-table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gray);
+    padding: 0.75rem 1rem;
+}
+
+.influencers-table td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+.influencer-cell {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.influencer-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+}
+
+.influencer-name {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.influencer-category {
+    font-size: 0.75rem;
+    color: var(--gray);
+}
+
+.empty-influencers {
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.empty-influencers img {
+    max-width: 180px;
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+}
+
+.empty-influencers h5 {
+    margin-bottom: 0.5rem;
+}
+
+.empty-influencers p {
+    margin-bottom: 1.5rem;
+    color: var(--gray);
+}
+
+/* Analytics Card */
+.analytics-card .card-body {
+    padding: 1.5rem;
+}
+
+.analytics-placeholder {
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.analytics-placeholder img {
+    max-width: 160px;
+    margin-bottom: 1.5rem;
+    opacity: 0.6;
+}
+
+.analytics-placeholder h5 {
+    margin-bottom: 0.5rem;
+}
+
+.analytics-placeholder p {
+    color: var(--gray);
+}
+
+.metric-list {
+    margin-top: 1.5rem;
+}
+
+.metric-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+}
+
+.metric-item:not(:last-child) {
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.metric-label {
+    color: var(--gray);
+}
+
+.metric-value {
+    font-weight: 600;
+    color: var(--dark);
+}
+
+/* Quick Actions Card */
+.quick-actions-card .card-body {
+    padding: 0;
+}
+
+.quick-action-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    transition: var(--transition);
+    border-bottom: 1px solid var(--light-gray);
+    color: var(--dark-gray);
+}
+
+.quick-action-item:last-child {
+    border-bottom: none;
+}
+
+.quick-action-item:hover {
+    background-color: var(--lighter-gray);
+    color: var(--primary);
+}
+
+.quick-action-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    color: var(--gray);
+}
+
+.quick-action-item:hover .quick-action-icon {
+    color: var(--primary);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .campaign-header {
+        flex-direction: column;
+    }
+    
+    .campaign-header-info h1 {
+        font-size: 1.75rem;
+    }
+    
+    .campaign-detail-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .influencers-card .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .influencers-card .card-header .btn {
+        width: 100%;
+    }
+}
+
+/* Animation Enhancements */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.campaign-card {
+    animation: fadeIn 0.4s ease forwards;
+}
+
+/* Status Badge Variations */
+.badge-active {
+    background-color: rgba(72, 187, 120, 0.1);
+    color: var(--success);
+}
+
+.badge-draft {
+    background-color: rgba(237, 137, 54, 0.1);
+    color: var(--warning);
+}
+
+.badge-paused, .badge-completed {
+    background-color: rgba(113, 128, 150, 0.1);
+    color: var(--dark-gray);
+}
+
+/* Hover Effects */
+.card-hover-effect:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+}

@@ -1,0 +1,83 @@
+[
+    {
+      "year": 2018,
+      "ad_spending_usd_m": 1.2,
+      "mobile_usd_m": 0.7,
+      "desktop_usd_m": 0.5,
+      "yoy_growth_percent": 0.12,
+      "mobile_share_percent": 0.58,
+      "desktop_share_percent": 0.42,
+      "spend_per_user_usd": 0.4
+    },
+    {
+      "year": 2019,
+      "ad_spending_usd_m": 1.5,
+      "mobile_usd_m": 0.9,
+      "desktop_usd_m": 0.6,
+      "yoy_growth_percent": 0.25,
+      "mobile_share_percent": 0.6,
+      "desktop_share_percent": 0.4,
+      "spend_per_user_usd": 0.5
+    },
+    {
+      "year": 2020,
+      "ad_spending_usd_m": 1.8,
+      "mobile_usd_m": 1.2,
+      "desktop_usd_m": 0.6,
+      "yoy_growth_percent": 0.2,
+      "mobile_share_percent": 0.67,
+      "desktop_share_percent": 0.33,
+      "spend_per_user_usd": 0.6
+    },
+    {
+      "year": 2021,
+      "ad_spending_usd_m": 2.3,
+      "mobile_usd_m": 1.6,
+      "desktop_usd_m": 0.7,
+      "yoy_growth_percent": 0.28,
+      "mobile_share_percent": 0.7,
+      "desktop_share_percent": 0.3,
+      "spend_per_user_usd": 0.75
+    },
+    {
+      "year": 2022,
+      "ad_spending_usd_m": 2.9,
+      "mobile_usd_m": 2.1,
+      "desktop_usd_m": 0.8,
+      "yoy_growth_percent": 0.26,
+      "mobile_share_percent": 0.72,
+      "desktop_share_percent": 0.28,
+      "spend_per_user_usd": 0.95
+    },
+    {
+      "year": 2023,
+      "ad_spending_usd_m": 3.6,
+      "mobile_usd_m": 2.7,
+      "desktop_usd_m": 0.9,
+      "yoy_growth_percent": 0.24,
+      "mobile_share_percent": 0.75,
+      "desktop_share_percent": 0.25,
+      "spend_per_user_usd": 1.15
+    },
+    {
+      "year": 2024,
+      "ad_spending_usd_m": 4.2,
+      "mobile_usd_m": 3.3,
+      "desktop_usd_m": 0.9,
+      "yoy_growth_percent": 0.17,
+      "mobile_share_percent": 0.79,
+      "desktop_share_percent": 0.21,
+      "spend_per_user_usd": 1.35
+    },
+    {
+      "year": 2025,
+      "ad_spending_usd_m": 4.8,
+      "mobile_usd_m": 3.9,
+      "desktop_usd_m": 0.9,
+      "yoy_growth_percent": 0.14,
+      "mobile_share_percent": 0.81,
+      "desktop_share_percent": 0.19,
+      "spend_per_user_usd": 1.5
+    }
+  ]
+  

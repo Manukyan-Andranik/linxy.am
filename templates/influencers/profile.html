@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.username }}'s Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f9f9fb;
+            margin: 0;
+            padding: 0;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .profile-header img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #3498db;
+        }
+
+        .profile-info h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #2c3e50;
+        }
+
+        .profile-info p {
+            margin: 5px 0;
+            font-size: 16px;
+            color: #7f8c8d;
+        }
+
+        .profile-details {
+            margin-top: 30px;
+        }
+
+        .profile-details h2 {
+            font-size: 20px;
+            color: #2980b9;
+            margin-bottom: 15px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .label {
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        .value {
+            color: #555;
+        }
+
+        .section {
+            margin-top: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .profile-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .profile-header img {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <img src="{{  or url_for('static', filename='photos/' + influencer.photo) }}" alt="{{ influencer.username }}" class="rounded-circle mb-3" width="150" height="150">
+            <div class="profile-info">
+                <h1>{{ user.username }}</h1>
+                <p>Email: {{ user.email }}</p>
+                <p>Role: {{ user.role|capitalize }}</p>
+            </div>
+        </div>
+
+        <div class="profile-details">
+            <h2>Account Details</h2>
+            <div class="detail-row">
+                <span class="label">User ID:</span>
+                <span class="value">{{ user.id }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Created At:</span>
+                <span class="value">{{ user.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Last Seen:</span>
+                <span class="value">{{ user.last_seen.strftime('%Y-%m-%d %H:%M') }}</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

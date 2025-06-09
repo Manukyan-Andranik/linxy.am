@@ -1,0 +1,21 @@
+[
+    {
+      "platform": "Instagram",
+      "avg_er": 0.042,
+      "likes_comments": 0.035,
+      "clicks": 0.007
+    },
+    {
+      "platform": "TikTok",
+      "avg_er": 0.081,
+      "likes_comments": 0.06,
+      "clicks": 0.021
+    },
+    {
+      "platform": "Facebook",
+      "avg_er": 0.023,
+      "likes_comments": 0.018,
+      "clicks": 0.005
+    }
+  ]
+  

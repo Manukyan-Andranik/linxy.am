@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Influencers - LinXy{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Browse Influencers</h1>
+            <div class="dropdown">
+                <button class="btn btn-outline dropdown-toggle" type="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-filter"></i> Filters
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="filterDropdown">
+                    <form class="px-4 py-3">
+                        <div class="form-group">
+                            <label for="platformFilter">Platform</label>
+                            <select class="form-control" id="platformFilter">
+                                <option>All Platforms</option>
+                                <option>Instagram</option>
+                                <option>YouTube</option>
+                                <option>TikTok</option>
+                                <option>Twitter</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryFilter">Category</label>
+                            <select class="form-control" id="categoryFilter">
+                                <option>All Categories</option>
+                                <option>Fashion</option>
+                                <option>Beauty</option>
+                                <option>Technology</option>
+                                <option>Lifestyle</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="followersFilter">Followers</label>
+                            <select class="form-control" id="followersFilter">
+                                <option>Any</option>
+                                <option>1K-10K</option>
+                                <option>10K-50K</option>
+                                <option>50K-100K</option>
+                                <option>100K+</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Apply Filters</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="search-box">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search influencers...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="card-title">Categories</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="categories">
+                            <a href="#" class="category active">All</a>
+                            <a href="#" class="category">Fashion</a>
+                            <a href="#" class="category">Beauty</a>
+                            <a href="#" class="category">Technology</a>
+                            <a href="#" class="category">Lifestyle</a>
+                            <a href="#" class="category">Travel</a>
+                            <a href="#" class="category">Food</a>
+                            <a href="#" class="category">Fitness</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <div class="row">
+                    {% for influencer in influencers.items %}
+                        <div class="col-md-6 mb-4">
+                            <div class="influencer-card card h-100">
+                                {% if influencer.profile.is_verified %}
+                                    <div class="influencer-verified" title="Verified Influencer">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="influencer-image">
+                                    <img src="{{ influencer.profile.profile_pic or url_for('static', filename='images/default-influencer.jpg') }}" alt="{{ influencer.username }}" class="card-img-top">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ influencer.username }}</h5>
+                                    <p class="card-text text-muted">{{ influencer.profile.categories }}</p>
+                                    
+                                    <div class="influencer-stats">
+                                        <div class="stat">
+                                            <i class="fas fa-users"></i>
+                                            <span>{{ influencer.profile.stats.followers|default('N/A') }}</span>
+                                        </div>
+                                        <div class="stat">
+                                            <i class="fas fa-heart"></i>
+                                            <span>{{ influencer.profile.stats.engagement|default('N/A') }}%</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="influencer-platforms mt-2">
+                                        {% if influencer.profile.social_media.instagram %}
+                                            <a href="#" class="platform-icon">
+                                                <i class="fab fa-instagram"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if influencer.profile.social_media.youtube %}
+                                            <a href="#" class="platform-icon">
+                                                <i class="fab fa-youtube"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if influencer.profile.social_media.tiktok %}
+                                            <a href="#" class="platform-icon">
+                                                <i class="fab fa-tiktok"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{{ url_for('influencer_profile', influencer_id=influencer.id) }}" class="btn btn-outline btn-sm">View Profile</a>
+                                    <a href="#" class="btn btn-primary btn-sm float-right">Contact</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if influencers.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('browse_influencers', page=influencers.prev_num) }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for page_num in influencers.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                            {% if page_num %}
+                                <li class="page-item{% if influencers.page == page_num %} active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('browse_influencers', page=page_num) }}">{{ page_num }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if influencers.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('browse_influencers', page=influencers.next_num) }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

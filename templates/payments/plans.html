@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+
+{% block title %}Pricing{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pricing.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="pricing-section">
+    <div class="container">
+        <header class="pricing-header">
+            <span class="pricing-badge">Transparent Pricing</span>
+            <h1 class="pricing-title">Simple, Predictable Pricing</h1>
+            <p class="pricing-subtitle">Choose the perfect plan for your influencer marketing needs. Scale up or down as needed.</p>
+            
+            <div class="plans-toggle monthly-active" id="planToggle">
+                <div class="toggle-slider"></div>
+                <div class="toggle-option toggle-active" data-plan="monthly">Monthly</div>
+                <div class="toggle-option" data-plan="yearly">Yearly (20% off)</div>
+            </div>
+        </header>
+
+        <div class="plans-wrapper">
+            <!-- Starter Plan -->
+            <article class="plan-card">
+                <header class="plan-header">
+                    <h3 class="plan-name">Starter</h3>
+                    <p class="plan-desc">Perfect for small businesses and startups</p>
+                    <div class="plan-price">
+                        <span class="price-amount monthly-price">20,000֏</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                    <div class="plan-price yearly-price" style="display: none;">
+                        <span class="price-amount">16,000֏</span>
+                        <span class="price-period">/month</span>
+                        <small style="display: block; font-size: 0.875rem; color: var(--color-secondary);">billed annually</small>
+                    </div>
+                </header>
+                <ul class="plan-features">
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Up to 5 active campaigns</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Basic influencer search</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Standard analytics dashboard</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Email support</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Up to 3 team members</span>
+                    </li>
+                </ul>
+                <!-- Change this in your pricing.html -->
+                <a href="{{ url_for('payment', plan_id='starter_monthly') }}" class="btn btn-outline">Get Started</a>
+
+                <!-- And for the professional plan -->
+                
+                
+            </article>
+
+            <!-- Professional Plan (Featured) -->
+            <article class="plan-card plan-featured">
+                <div class="featured-badge">Recommended</div>
+                <header class="plan-header">
+                    <h3 class="plan-name">Professional</h3>
+                    <p class="plan-desc">For growing businesses with multiple campaigns</p>
+                    <div class="plan-price">
+                        <span class="price-amount monthly-price">35,000֏</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                    <div class="plan-price yearly-price" style="display: none;">
+                        <span class="price-amount">28,000֏</span>
+                        <span class="price-period">/month</span>
+                        <small style="display: block; font-size: 0.875rem; color: var(--color-secondary);">billed annually</small>
+                    </div>
+                </header>
+                <ul class="plan-features">
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Up to 20 active campaigns</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Advanced influencer search</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>AI-powered matching</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Detailed analytics & reporting</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Priority email & chat support</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Up to 10 team members</span>
+                    </li>
+                </ul>
+                <a href="{{ url_for('payment', plan_id='professional_monthly') }}" class="btn btn-primary">Start Free Trial</a>
+            </article>
+
+            <!-- Enterprise Plan -->
+            <article class="plan-card">
+                <header class="plan-header">
+                    <h3 class="plan-name">Enterprise</h3>
+                    <p class="plan-desc">For large businesses and agencies</p>
+                    <div class="plan-price">
+                        <span class="price-amount monthly-price">150,000֏</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                    <div class="plan-price yearly-price" style="display: none;">
+                        <span class="price-amount">120,000֏</span>
+                        <span class="price-period">/month</span>
+                        <small style="display: block; font-size: 0.875rem; color: var(--color-secondary);">billed annually</small>
+                    </div>
+                </header>
+                <ul class="plan-features">
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Unlimited campaigns</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Premium influencer search</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Advanced AI matching</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Custom reporting & analytics</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Dedicated account manager</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>API access</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Unlimited team members</span>
+                    </li>
+                </ul>
+                <a href="{{ url_for('home') }}" class="btn btn-outline">Contact Sales</a>
+            </article>
+        </div>
+
+        <section class="faq-section">
+            <h2 class="faq-title">Frequently Asked Questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I change plans later?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, you can upgrade or downgrade your plan at any time. When you upgrade, you'll immediately gain access to the new features and your billing will be prorated. Downgrades take effect at the end of your current billing cycle.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is there a free trial?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We offer a 14-day free trial for our Professional plan so you can test all features before committing. No credit card is required to start your trial. Enterprise plans come with a custom demo and onboarding process.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do payments work?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We accept all major credit cards (Visa, Mastercard, American Express) and PayPal. Monthly plans are billed every 30 days from your signup date. Annual plans are billed once per year and offer a 20% discount compared to monthly billing.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What happens if I exceed my campaign limits?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>If you reach your campaign limit, you'll need to either archive existing campaigns or upgrade your plan. We'll notify you when you're approaching your limit so you can make adjustments before hitting the ceiling.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Plan toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const planToggle = document.getElementById('planToggle');
+        const toggleOptions = document.querySelectorAll('.toggle-option');
+        const monthlyPrices = document.querySelectorAll('.monthly-price');
+        const yearlyPrices = document.querySelectorAll('.yearly-price');
+        
+        toggleOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const planType = this.getAttribute('data-plan');
+                
+                // Update toggle UI
+                toggleOptions.forEach(opt => opt.classList.remove('toggle-active'));
+                this.classList.add('toggle-active');
+                planToggle.classList.remove('monthly-active', 'yearly-active');
+                planToggle.classList.add(`${planType}-active`);
+                
+                // Toggle price displays
+                if (planType === 'monthly') {
+                    monthlyPrices.forEach(el => el.style.display = '');
+                    yearlyPrices.forEach(el => el.style.display = 'none');
+                } else {
+                    monthlyPrices.forEach(el => el.style.display = 'none');
+                    yearlyPrices.forEach(el => el.style.display = '');
+                }
+            });
+        });
+        
+        // FAQ accordion functionality
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                // Close all other items
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                        otherItem.querySelector('.faq-answer').style.maxHeight = '0';
+                        otherItem.querySelector('.faq-answer').style.paddingBottom = '0';
+                    }
+                });
+                
+                // Toggle current item
+                item.classList.toggle('active');
+                const answer = item.querySelector('.faq-answer');
+                if (item.classList.contains('active')) {
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                    answer.style.paddingBottom = '1.5rem';
+                } else {
+                    answer.style.maxHeight = '0';
+                    answer.style.paddingBottom = '0';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

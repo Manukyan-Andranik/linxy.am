@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Home - LinXy Influencer Marketing Platform{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Connect with the Right Influencers</h1>
+            <p class="hero-subtitle">Our AI-powered platform helps brands find and collaborate with influencers that truly match their audience and values.</p>
+            <div class="hero-buttons">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Go to Dashboard</a>
+                {% else %}
+                    <a href="{{ url_for('register') }}" class="btn btn-secondary">Get Started</a>
+                    <a href="{{ url_for('browse_influencers') }}" class="btn btn-outline">Browse Influencers</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">Why Choose LinXy?</h2>
+        <p class="section-subtitle">Our platform provides everything you need to run successful influencer marketing campaigns</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="feature-title">Advanced Search</h3>
+                <p class="feature-text">Find influencers by niche, engagement rate, audience demographics, and more with our powerful search tools.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="feature-title">Performance Analytics</h3>
+                <p class="feature-text">Track campaign results with real-time data and detailed reports to measure your ROI.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="feature-title">AI Matching</h3>
+                <p class="feature-text">Our algorithm suggests the best influencer matches for your brand based on multiple factors.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <h3 class="feature-title">Contract Management</h3>
+                <p class="feature-text">Handle all agreements and payments securely in one place with our built-in contract system.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3 class="feature-title">Direct Messaging</h3>
+                <p class="feature-text">Communicate with influencers directly through our platform without sharing personal contact info.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title">Verified Influencers</h3>
+                <p class="feature-text">All influencers go through a verification process to ensure authenticity and quality.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="section bg-light">
+    <div class="container">
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-subtitle">Get started with LinXy in just a few simple steps</p>
+        
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Create Your Campaign</h3>
+                <p class="step-text">Define your campaign goals, budget, and target audience.</p>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Find Influencers</h3>
+                <p class="step-text">Use our search tools or let our AI suggest the best matches.</p>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Connect & Collaborate</h3>
+                <p class="step-text">Reach out to influencers and negotiate terms directly.</p>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3 class="step-title">Track & Analyze</h3>
+                <p class="step-text">Monitor performance and measure your campaign's success.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Comprehensive Charts Dashboard -->
+<div id="chart-container">
+    <h2 class="section-title">Influencer Marketing Insights</h2>
+    {% include 'partials/charts.html' %}
+</div>
+
+<!-- Testimonials Section -->
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">What Our Clients Say</h2>
+        
+        <div class="testimonials">
+            <div class="testimonial">
+                <div class="testimonial-content">
+                    <p>"LinXy helped us find the perfect influencers for our eco-friendly product line. Our campaign ROI increased by 40% compared to our previous efforts!"</p>
+                </div>
+                <!-- <div class="testimonial-author">
+                    <img src="{{ url_for('static', filename='images/testimonial1.jpg') }}" alt="Maria Sargsyan" class="author-image">
+                    <div class="author-info">
+                        <h4 class="author-name">Maria Sargsyan</h4>
+                        <p class="author-title">Marketing Director, GreenLife</p>
+                    </div>
+                </div> -->
+            </div>
+            
+            <div class="testimonial">
+                <div class="testimonial-content">
+                    <p>"The AI matching feature is a game-changer. We saved so much time finding relevant influencers and the communication tools kept everything organized."</p>
+                </div>
+                <!-- <div class="testimonial-author">
+                    <img src="{{ url_for('static', filename='images/testimonial2.jpg') }}" alt="Aram Petrosyan" class="author-image">
+                    <div class="author-info">
+                        <h4 class="author-name">Aram Petrosyan</h4>
+                        <p class="author-title">Founder, StyleHub</p>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

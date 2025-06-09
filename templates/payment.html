@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block title %}Payment{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/payment.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="payment-section">
+    <div class="container">
+        <div class="payment-wrapper">
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h2>Order Summary</h2>
+                <div class="plan-selected">
+                    <h3>{{ plan.name }} Plan</h3>
+                    <p class="price">{{ "%.2f"|format(plan.price/100) }} {{ plan.currency }} <span>/{{ plan.interval }}</span></p>
+                    <p class="billing-cycle">{{ "Billed annually (20% off)" if plan.interval == "year" else "Billed monthly" }}</p>
+                </div>
+                
+                <div class="features-list">
+                    <h4>Plan includes:</h4>
+                    <ul>
+                        {% for feature in plan.features %}
+                        <li>{{ feature }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="total-summary">
+                    <div class="total-line">
+                        <span>Subtotal</span>
+                        <span>{{ "%.2f"|format(plan.price/100) }} {{ plan.currency }}</span>
+                    </div>
+                    <div class="total-line">
+                        <span>Tax</span>
+                        <span>Calculated at checkout</span>
+                    </div>
+                    <div class="total-line grand-total">
+                        <span>Total</span>
+                        <span>{{ "%.2f"|format(plan.price/100) }} {{ plan.currency }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment Form -->
+            <div class="payment-form">
+                <h2>Payment Information</h2>
+                <form id="payment-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required value="{{ current_user.email if current_user.is_authenticated else '' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required value="{{ current_user.username if current_user.is_authenticated else '' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="card-element">Credit or Debit Card</label>
+                        <div id="card-element" class="card-element">
+                            <!-- Stripe Card Element will be inserted here -->
+                        </div>
+                        <div id="card-errors" class="card-errors" role="alert"></div>
+                    </div>
+                    
+
+                    
+                    <button type="submit" id="submit-button" class="btn btn-primary">
+                        <span id="button-text">Pay {{ "%.2f"|format(plan.price/100) }} {{ plan.currency }}</span>
+                        <span id="button-spinner" class="spinner hidden"></span>
+                    </button>
+                    
+                    <p class="secure-payment">
+                        <i class="fas fa-lock"></i> Secure payment powered by Stripe
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const stripe = Stripe('{{ stripe_public_key }}');
+        const elements = stripe.elements();
+        const cardElement = elements.create('card', {
+            style: {
+                base: {
+                    fontSize: '16px',
+                    color: '#32325d',
+                    '::placeholder': {
+                        color: '#aab7c4'
+                    }
+                },
+                invalid: {
+                    color: '#fa755a',
+                    iconColor: '#fa755a'
+                }
+            }
+        });
+        
+        cardElement.mount('#card-element');
+        
+        const form = document.getElementById('payment-form');
+        const submitButton = document.getElementById('submit-button');
+        const buttonSpinner = document.getElementById('button-spinner');
+        const buttonText = document.getElementById('button-text');
+        
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            // Disable form submission
+            submitButton.disabled = true;
+            buttonText.textContent = 'Processing...';
+            buttonSpinner.classList.remove('hidden');
+            
+            const {error, paymentMethod} = await stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+                billing_details: {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value
+                }
+            });
+            
+            if (error) {
+                // Show error to customer
+                const errorElement = document.getElementById('card-errors');
+                errorElement.textContent = error.message;
+                
+                // Re-enable form
+                submitButton.disabled = false;
+                buttonText.textContent = `Pay {{ "%.2f"|format(plan.price/100) }} {{ plan.currency }}`;
+                buttonSpinner.classList.add('hidden');
+            } else {
+                // Send paymentMethod.id to your server
+                const response = await fetch('/create-subscription', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        payment_method_id: paymentMethod.id,
+                        plan_id: '{{ plan.id }}',
+                        email: document.getElementById('email').value,
+                        name: document.getElementById('name').value
+                    })
+                });
+                
+                const subscription = await response.json();
+                
+                if (subscription.error) {
+                    // Show error from server
+                    const errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = subscription.error;
+                    
+                    // Re-enable form
+                    submitButton.disabled = false;
+                    buttonText.textContent = `Pay {{ "%.2f"|format(plan.price/100) }} {{ plan.currency }}`;
+                    buttonSpinner.classList.add('hidden');
+                } else if (subscription.requires_action) {
+                    // Handle 3D Secure authentication
+                    const {error: errorAction, paymentIntent} = await stripe.handleCardAction(
+                        subscription.payment_intent_client_secret
+                    );
+                    
+                    if (errorAction) {
+                        const errorElement = document.getElementById('card-errors');
+                        errorElement.textContent = errorAction.message;
+                        
+                        submitButton.disabled = false;
+                        buttonText.textContent = `Pay {{ "%.2f"|format(plan.price/100) }} {{ plan.currency }}`;
+                        buttonSpinner.classList.add('hidden');
+                    } else {
+                        // Confirm the PaymentIntent after handling action
+                        const confirmResponse = await fetch('/confirm-subscription', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                payment_intent_id: paymentIntent.id,
+                                plan_id: '{{ plan.id }}'
+                            })
+                        });
+                        
+                        const confirmedSubscription = await confirmResponse.json();
+                        
+                        if (confirmedSubscription.error) {
+                            const errorElement = document.getElementById('card-errors');
+                            errorElement.textContent = confirmedSubscription.error;
+                            
+                            submitButton.disabled = false;
+                            buttonText.textContent = `Pay {{ "%.2f"|format(plan.price/100) }} {{ plan.currency }}`;
+                            buttonSpinner.classList.add('hidden');
+                        } else {
+                            // Successful subscription
+                            window.location.href = '/payment/success?session_id=' + confirmedSubscription.session_id;
+                        }
+                    }
+                } else {
+                    // Successful subscription
+                    window.location.href = '/payment/success?session_id=' + subscription.session_id;
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

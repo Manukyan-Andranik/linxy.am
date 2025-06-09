@@ -1,0 +1,23 @@
+[
+    {
+      "age_group": "35+",
+      "male_percent": 0.03,
+      "female_percent": 0.05
+    },
+    {
+      "age_group": "25–34",
+      "male_percent": 0.1,
+      "female_percent": 0.15
+    },
+    {
+      "age_group": "18–24",
+      "male_percent": 0.2,
+      "female_percent": 0.25
+    },
+    {
+      "age_group": "13–17",
+      "male_percent": 0.12,
+      "female_percent": 0.18
+    }
+  ]
+  

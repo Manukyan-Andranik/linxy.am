@@ -10,11 +10,18 @@ from sklearn.preprocessing import StandardScaler
 
 def recommend_influencers(campaign_preferences=None):
     # Get all influencers from your database
+    # with DataManager(
+    #     dbname="linxy",
+    #     user="linxy_admin",
+    #     password="securepassword123.",
+    #     host="localhost",
+    #     port="5432"
+    # ) as dm:
     with DataManager(
         dbname="linxy",
         user="linxy_admin",
-        password="securepassword123.",
-        host="localhost",
+        password="Q1hpFX3FhMwGe67yptYW6tY2TuGhXIaz",
+        host="dpg-d13i1ok9c44c739ce16g-a",
         port="5432"
     ) as dm:
         all_influencers = dm.get_all_influencers(limit=100)

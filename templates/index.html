@@ -119,10 +119,21 @@
 </section>
 
 <!-- Comprehensive Charts Dashboard -->
-<div id="chart-container" class="{% if not current_user.is_authenticated %}blurred{% endif %}">
-    <h2 class="section-title">Influencer Marketing Insights</h2>
-    {% include 'partials/charts.html' %}
+<h2 class="section-title">Influencer Marketing Insights</h2>
+<div id="chart-wrapper" style="position: relative;">
+    <div id="chart-container" class="{% if not current_user.is_authenticated %}blurred{% endif %}">
+        {% include 'partials/charts.html' %}
+    </div>
+
+    {% if not current_user.is_authenticated %}
+        <div class="blur-overlay">
+            <p class="blur-text">Login to view insights</p>
+            <a href="{{ url_for('login') }}" class="blur-button">Access</a>
+        </div>
+    {% endif %}
 </div>
+
+
 
 
 <!-- Testimonials Section -->

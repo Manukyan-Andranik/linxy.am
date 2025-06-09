@@ -181,23 +181,51 @@
     justify-content: center;
 }
 
+/* Overlay that stays sharp and clickable */
 
-.blurred {
-    filter: blur(5px);
-    pointer-events: none; /* Prevent interaction with charts */
+#chart-wrapper {
     position: relative;
 }
 
-.blurred::after {
-    content: "Login to view insights";
+.blurred {
+    filter: blur(5px);
+    pointer-events: none;
+}
+
+.blur-overlay {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0.8);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(255, 255, 255, 0.6);
+    pointer-events: auto;
+}
+
+.blur-text {
+    font-size: 1.3rem;
+    font-weight: bold;
     color: #333;
-    padding: 1rem 2rem;
+    margin-bottom: 1rem;
+}
+
+.blur-button {
+    padding: 0.7rem 1.6rem;
+    background-color: #007bff;
+    color: white;
     border-radius: 8px;
     font-weight: bold;
-    z-index: 2;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.blur-button:hover {
+    background-color: #0056b3;
 }

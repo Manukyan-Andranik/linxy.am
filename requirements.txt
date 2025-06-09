@@ -217,8 +217,6 @@ PyJWT==2.9.0
 pymilvus==2.3.0
 pymongo==4.10.1
 PyMySQL==1.0.2
-pyobjc-core==11.0
-pyobjc-framework-Cocoa==11.0
 pyparsing==3.1.4
 PyPDF2==3.0.1
 pypdfium2==4.30.1

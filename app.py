@@ -203,11 +203,18 @@ def dashboard():
 @app.route("/influencers")   # LIST Influencers
 @login_required
 def browse_influencers():
+    # with DataManager(
+    #     dbname="linxy",
+    #     user="linxy_admin",
+    #     password="Q1hpFX3FhMwGe67yptYW6tY2TuGhXIaz",
+    #     host="localhost",
+    #     port="5432"
+    # ) as dm:
     with DataManager(
         dbname="linxy",
         user="linxy_admin",
-        password="securepassword123.",
-        host="localhost",
+        password="Q1hpFX3FhMwGe67yptYW6tY2TuGhXIaz",
+        host="dpg-d13i1ok9c44c739ce16g-a",
         port="5432"
     ) as dm:
         all_influencers = dm.get_all_influencers(limit=100)

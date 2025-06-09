@@ -183,22 +183,18 @@ def edit_profile():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    campaigns = Campaign.query.filter_by(creator_id=current_user.id).order_by(Campaign.created_at.desc()).limit(5).all()
-    collaborations = Collaboration.query.filter_by(influencer_id=current_user.id).order_by(Collaboration.created_at.desc()).limit(5).all()
-    # Get AI recommendations
-    recommended_influencers = recommend_influencers()
-    # Calculate stats
-    active_campaigns = Campaign.query.filter_by(creator_id=current_user.id, status='active').count()
-    total_influencers = Collaboration.query.filter(Collaboration.campaign_id.in_(
-        [c.id for c in Campaign.query.filter_by(creator_id=current_user.id).all()]
-    )).count()
-
-    return render_template('dashboard.html',
-                           recommended_influencers=recommended_influencers,
-                           campaigns=campaigns,
-                           collaborations=collaborations,
-                           active_campaigns=active_campaigns,
-                           total_influencers=total_influencers)
+    with DataManager(
+        dbname="linxy",
+        user="linxy_admin",
+        password="Q1hpFX3FhMwGe67yptYW6tY2TuGhXIaz",
+        host="dpg-d13i1ok9c44c739ce16g-a",
+        port="5432"
+    ) as dm:
+        all_influencers = dm.get_all_influencers(limit=100)
+        for influencer in all_influencers:
+            influencer_data = dm.get_influencer_data_points(influencer['id'])
+            influencer['data_points'] = influencer_data
+        return render_template('influencers.html', influencers=all_influencers)
 
 @app.route("/influencers")   # LIST Influencers
 @login_required
@@ -253,7 +249,6 @@ def list_campaigns():
         campaign.brand = current_user.company_name if hasattr(current_user, 'company_name') else "N/A"
 
     return render_template('campaigns/list.html', campaigns=campaigns_pagination)
-
 
 @app.route('/campaigns/<int:campaign_id>/view')    # VIEW Campaign
 @login_required
@@ -429,8 +424,6 @@ def checkout(plan, period):
             flash(f'Payment error: {e.user_message}', 'danger')
 
     return render_template('payments/checkout.html', form=form, plan=plan, period=period, price=price)
-
-
 
 @app.route('/payment/<plan_id>')
 def payment(plan_id):

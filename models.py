@@ -258,7 +258,7 @@ class Campaign(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
     brand = db.Column(db.String(100))  
-    logo = db.Column(db.String(100))  
+    logo = db.Column(db.String(100), default='default_campaign_logo.jpg')  # Default logo
     
     description = db.Column(db.Text)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))

@@ -119,10 +119,11 @@
 </section>
 
 <!-- Comprehensive Charts Dashboard -->
-<div id="chart-container">
+<div id="chart-container" class="{% if not current_user.is_authenticated %}blurred{% endif %}">
     <h2 class="section-title">Influencer Marketing Insights</h2>
     {% include 'partials/charts.html' %}
 </div>
+
 
 <!-- Testimonials Section -->
 <section class="section">

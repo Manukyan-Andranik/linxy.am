@@ -10,3 +10,7 @@ all_influencers.json
 influencers_processed.json
 influencers_processed.txt
 generate_synetic_data.py
+db_dump.sql
+import.sh
+new_data_manager.py
+new_models.py

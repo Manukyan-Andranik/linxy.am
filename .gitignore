@@ -14,3 +14,5 @@ db_dump.sql
 import.sh
 new_data_manager.py
 new_models.py
+db_dump.sql
+linxy.db
